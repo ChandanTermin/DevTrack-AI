@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers.user import router as user_router
-
+from routers.resume import router as resume_router
 from database import Base, engine
 
 import models
@@ -20,6 +20,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(user_router)
+app.include_router(resume_router)
 
 @app.get("/")
 def home():
