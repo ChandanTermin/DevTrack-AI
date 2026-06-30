@@ -2,7 +2,12 @@
 
 import { useState } from "react";
 import axios from "axios";
+
+import MatchedSkills from "./MatchedSkills";
+import MissingSkills from "./MissingSkills";
+import SuggestionCard from "./SuggestionCard";
 import InterviewQuestions from "./InterviewQuestions";
+
 export default function JDMatcher({ resumeText }) {
   const [jobDescription, setJobDescription] = useState("");
   const [jdResult, setJdResult] = useState(null);
@@ -26,6 +31,7 @@ export default function JDMatcher({ resumeText }) {
       );
 
       setJdResult(response.data);
+
     } catch (error) {
       console.error(error);
       alert("JD Match failed.");
@@ -34,10 +40,16 @@ export default function JDMatcher({ resumeText }) {
     }
   }
 
-  return (
-    <div className="mt-8 rounded-2xl border border-slate-700 bg-slate-900 p-8">
+  const getColor = (score) => {
+    if (score >= 80) return "text-green-400";
+    if (score >= 60) return "text-yellow-400";
+    return "text-red-400";
+  };
 
-      <h2 className="text-2xl font-bold text-white">
+  return (
+    <div className="mt-8 rounded-3xl border border-slate-800 bg-slate-900 p-8 shadow-2xl">
+
+      <h2 className="text-3xl font-bold text-white">
         Job Description Match
       </h2>
 
@@ -45,110 +57,59 @@ export default function JDMatcher({ resumeText }) {
         value={jobDescription}
         onChange={(e) => setJobDescription(e.target.value)}
         placeholder="Paste the Job Description here..."
-        className="mt-5 h-48 w-full rounded-xl bg-slate-800 p-4 text-white outline-none"
+        className="mt-6 h-48 w-full rounded-2xl border border-slate-700 bg-slate-800 p-5 text-white outline-none focus:border-violet-500"
       />
 
       <button
         onClick={analyzeJobDescription}
         disabled={loading}
-        className="mt-5 rounded-xl bg-violet-600 px-6 py-3 font-semibold text-white transition hover:bg-violet-700 disabled:bg-slate-700"
+        className="mt-6 rounded-xl bg-violet-600 px-8 py-3 font-semibold text-white transition hover:bg-violet-700 disabled:bg-slate-700"
       >
         {loading ? "Analyzing..." : "Analyze Match"}
       </button>
 
       {jdResult && (
-        <div className="mt-8">
+        <>
+          <div className="mt-10 flex flex-col items-center">
 
-          <h3 className="text-4xl font-bold text-green-400">
-            {jdResult.match_score}%
-          </h3>
+            <div className="flex h-40 w-40 items-center justify-center rounded-full border-[10px] border-violet-500 bg-slate-950 shadow-xl">
 
-          <p className="text-slate-400">
-            Job Match Score
-          </p>
+              <div className="text-center">
 
-          {/* Matched Skills */}
-
-          <div className="mt-6">
-
-            <h4 className="font-bold text-white">
-              Matched Skills
-            </h4>
-
-            <div className="mt-2 flex flex-wrap gap-2">
-
-              {jdResult.matched_skills.map((skill) => (
-                <span
-                  key={skill}
-                  className="rounded-full bg-green-600 px-4 py-2 text-white"
+                <div
+                  className={`text-5xl font-bold ${getColor(
+                    jdResult.match_score
+                  )}`}
                 >
-                  {skill}
-                </span>
-              ))}
+                  {jdResult.match_score}%
+                </div>
 
-            </div>
-
-          </div>
-
-          {/* Missing Skills */}
-
-          <div className="mt-6">
-
-            <h4 className="font-bold text-white">
-              Missing Skills
-            </h4>
-
-            <div className="mt-2 flex flex-wrap gap-2">
-
-              {jdResult.missing_skills.map((skill) => (
-                <span
-                  key={skill}
-                  className="rounded-full bg-red-600 px-4 py-2 text-white"
-                >
-                  {skill}
-                </span>
-              ))}
-
-            </div>
-
-          </div>
-
-          {/* Suggestions */}
-
-          {jdResult.suggestions &&
-            jdResult.suggestions.length > 0 && (
-
-              <div className="mt-8">
-
-                <h4 className="mb-4 text-xl font-bold text-white">
-                  Resume Improvement Suggestions
-                </h4>
-
-                <div className="space-y-3">
-
-                  {jdResult.suggestions.map((item, index) => (
-
-                    <div
-                      key={index}
-                      className="rounded-xl border border-yellow-500/30 bg-yellow-500/10 p-4 text-yellow-300"
-                    >
-                      💡 {item}
-                    </div>
-
-                  ))}
-
+                <div className="mt-2 text-slate-400">
+                  Match Score
                 </div>
 
               </div>
 
-            )}
+            </div>
 
-        </div>
+          </div>
+
+          <div className="mt-10 grid gap-6 lg:grid-cols-2">
+
+            <MatchedSkills skills={jdResult.matched_skills} />
+
+            <MissingSkills skills={jdResult.missing_skills} />
+
+          </div>
+
+          <SuggestionCard suggestions={jdResult.suggestions} />
+
+          <InterviewQuestions
+            resumeText={resumeText}
+            jobDescription={jobDescription}
+          />
+        </>
       )}
-      <InterviewQuestions
-  resumeText={resumeText}
-  jobDescription={jobDescription}
-/>
 
     </div>
   );

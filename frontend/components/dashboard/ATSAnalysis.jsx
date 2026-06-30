@@ -1,94 +1,126 @@
+import CircularProgress from "./CircularProgress";
+
 export default function ATSAnalysis({ analysis }) {
   if (!analysis) return null;
 
+  const sections = [
+    { name: "Contact", score: analysis.section_scores.contact, total: 10 },
+    { name: "Summary", score: analysis.section_scores.summary, total: 10 },
+    { name: "Skills", score: analysis.section_scores.skills, total: 20 },
+    { name: "Projects", score: analysis.section_scores.projects, total: 20 },
+    { name: "Education", score: analysis.section_scores.education, total: 10 },
+  ];
+
   return (
-    <div className="rounded-2xl border border-slate-700 bg-slate-900 p-8">
-      <h2 className="mb-6 text-3xl font-bold text-white">
-        ATS Analysis
-      </h2>
+    <div className="mt-8 rounded-3xl border border-slate-800 bg-slate-900 p-8 shadow-2xl">
 
-      <div className="mb-8 rounded-xl bg-violet-600 p-5 text-center">
-        <p className="text-sm text-violet-100">
-          Overall ATS Score
-        </p>
+      {/* Header */}
+      <div className="mb-10 flex flex-col items-center">
 
-        <h1 className="mt-2 text-5xl font-bold text-white">
-          {analysis.overall_score}/100
-        </h1>
-      </div>
+        <h2 className="text-3xl font-bold text-white">
+          ATS Resume Analysis
+        </h2>
 
-      <div className="grid gap-4 md:grid-cols-2">
-
-        <div className="rounded-xl bg-slate-800 p-4">
-          Contact
-          <div className="mt-2 text-2xl font-bold text-green-400">
-            {analysis.section_scores.contact}
-          </div>
-        </div>
-
-        <div className="rounded-xl bg-slate-800 p-4">
-          Summary
-          <div className="mt-2 text-2xl font-bold text-green-400">
-            {analysis.section_scores.summary}
-          </div>
-        </div>
-
-        <div className="rounded-xl bg-slate-800 p-4">
-          Skills
-          <div className="mt-2 text-2xl font-bold text-green-400">
-            {analysis.section_scores.skills}
-          </div>
-        </div>
-
-        <div className="rounded-xl bg-slate-800 p-4">
-          Projects
-          <div className="mt-2 text-2xl font-bold text-green-400">
-            {analysis.section_scores.projects}
-          </div>
-        </div>
-
-        <div className="rounded-xl bg-slate-800 p-4">
-          Education
-          <div className="mt-2 text-2xl font-bold text-green-400">
-            {analysis.section_scores.education}
-          </div>
+        <div className="mt-8">
+          <CircularProgress score={analysis.overall_score} />
         </div>
 
       </div>
 
-      <div className="mt-8">
-        <h3 className="mb-3 text-xl font-bold text-white">
+      {/* Section Scores */}
+      <h3 className="mb-5 text-2xl font-semibold text-white">
+        Section Scores
+      </h3>
+
+      <div className="space-y-5">
+
+        {sections.map((section) => {
+          const percentage = (section.score / section.total) * 100;
+
+          return (
+            <div key={section.name}>
+
+              <div className="mb-2 flex justify-between">
+
+                <span className="font-medium text-white">
+                  {section.name}
+                </span>
+
+                <span className="font-semibold text-violet-400">
+                  {section.score}/{section.total}
+                </span>
+
+              </div>
+
+              <div className="h-3 overflow-hidden rounded-full bg-slate-700">
+
+                <div
+                  className="h-full rounded-full bg-violet-500 transition-all duration-700"
+                  style={{ width: `${percentage}%` }}
+                />
+
+              </div>
+
+            </div>
+          );
+        })}
+
+      </div>
+
+      {/* Skills */}
+      <div className="mt-10">
+
+        <h3 className="mb-4 text-2xl font-semibold text-white">
           Skills Detected
         </h3>
 
-        <div className="flex flex-wrap gap-2">
-          {analysis.skills_found.map((skill, index) => (
+        <div className="flex flex-wrap gap-3">
+
+          {analysis.skills_found.map((skill) => (
             <span
-              key={index}
-              className="rounded-full bg-violet-600 px-4 py-2 text-sm text-white"
+              key={skill}
+              className="rounded-full border border-violet-500 bg-violet-500/10 px-4 py-2 text-sm font-medium text-violet-300"
             >
               {skill}
             </span>
           ))}
+
         </div>
+
       </div>
 
-      <div className="mt-8">
-        <h3 className="mb-3 text-xl font-bold text-white">
-          Suggestions
+      {/* Suggestions */}
+      <div className="mt-10">
+
+        <h3 className="mb-4 text-2xl font-semibold text-white">
+          ATS Suggestions
         </h3>
 
-        <ul className="space-y-2">
-          {analysis.suggestions.map((item, index) => (
-            <li
-              key={index}
-              className="rounded-lg bg-red-500/10 p-3 text-red-400"
-            >
-              • {item}
-            </li>
-          ))}
-        </ul>
+        {analysis.suggestions.length === 0 ? (
+
+          <div className="rounded-xl border border-green-500/20 bg-green-500/10 p-4 text-green-400">
+            ✅ Excellent! Your resume meets all ATS checks.
+          </div>
+
+        ) : (
+
+          <div className="space-y-3">
+
+            {analysis.suggestions.map((item, index) => (
+              <div
+                key={index}
+                className="rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-red-300"
+              >
+                ⚠️ {item}
+              </div>
+            ))}
+
+          </div>
+
+        )}
+
       </div>
+
     </div>
   );
 }

@@ -1,55 +1,30 @@
 "use client";
 
-import Sidebar from "../../components/layout/Sidebar";
-import Header from "../../components/layout/Header";
-import StatsCard from "../../components/dashboard/StatsCard";
-import QuickActions from "../../components/dashboard/QuickActions";
-import RecentActivity from "../../components/dashboard/RecentActivity";
-import ResumeUpload from "../../components/dashboard/ResumeUpload";
+import Sidebar from "@/components/layout/Sidebar";
+import Header from "@/components/layout/Header";
+import Dashboard from "./Dashboard";
 
-export default function Dashboard() {
+export default function DashboardPage() {
   return (
-    <main className="flex min-h-screen bg-slate-950 text-white">
+    <main className="min-h-screen bg-[#09090B] text-zinc-100">
 
-      <Sidebar />
+      <div className="flex">
 
-      <section className="flex-1 p-10">
+        <Sidebar />
 
-        <Header />
-        <ResumeUpload />
+        <section className="flex-1 overflow-y-auto">
 
-<div className="mt-10 grid grid-cols-1 gap-6 xl:grid-cols-2">
-          <StatsCard
-            title="Resume Score"
-            value="82%"
-            subtitle="+6% this week"
-          />
+          <div className="mx-auto max-w-7xl px-10 py-8">
 
-          <StatsCard
-            title="Applications"
-            value="14"
-            subtitle="3 pending"
-          />
+            <Header />
 
-          <StatsCard
-            title="Interview Calls"
-            value="3"
-            subtitle="2 this month"
-          />
+            <Dashboard />
 
-          <StatsCard
-            title="GitHub Score"
-            value="91"
-            subtitle="Excellent"
-          />
-          <div className="mt-10 grid gap-6 lg:grid-cols-2">
-  <QuickActions />
-  <RecentActivity />
-</div>
+          </div>
 
-        </div>
+        </section>
 
-      </section>
+      </div>
 
     </main>
   );
