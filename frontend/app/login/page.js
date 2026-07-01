@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function Login() {
   const router = useRouter();
 
@@ -29,7 +31,7 @@ export default function Login() {
     try {
       setLoading(true);
 
-      const response = await fetch("http://127.0.0.1:8000/login", {
+      const response = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,12 +62,10 @@ export default function Login() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#09090B] px-6 text-white">
-
       <form
         onSubmit={handleLogin}
         className="w-full max-w-md rounded-3xl border border-zinc-800 bg-[#111827] p-8"
       >
-
         <h1 className="mb-2 text-center text-3xl font-bold">
           Welcome Back
         </h1>
@@ -96,9 +96,7 @@ export default function Login() {
         >
           {loading ? "Signing In..." : "Login"}
         </button>
-
       </form>
-
     </main>
   );
 }

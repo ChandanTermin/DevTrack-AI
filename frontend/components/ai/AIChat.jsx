@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { Bot, User, Send, Loader2 } from "lucide-react";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function AIChat({
   resumeText,
   analysis,
@@ -22,7 +24,9 @@ export default function AIChat({
   const bottomRef = useRef(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    bottomRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
   }, [messages]);
 
   async function sendMessage() {
@@ -40,22 +44,17 @@ export default function AIChat({
     setMessage("");
 
     setLoading(true);
-    console.log({
-  resumeText,
-  analysis,
-  jdResult,
-});
 
     try {
       const res = await axios.post(
-  "http://127.0.0.1:8000/ai-chat",
-  {
-    message: currentMessage,
-    resume_text: resumeText,
-    analysis: analysis,
-    jd_result: jdResult,
-  }
-);
+        `${API_URL}/ai-chat`,
+        {
+          message: currentMessage,
+          resume_text: resumeText,
+          analysis: analysis,
+          jd_result: jdResult,
+        }
+      );
 
       setMessages((prev) => [
         ...prev,
@@ -65,6 +64,8 @@ export default function AIChat({
         },
       ]);
     } catch (err) {
+      console.error(err);
+
       setMessages((prev) => [
         ...prev,
         {
@@ -79,9 +80,7 @@ export default function AIChat({
 
   return (
     <div className="mt-8 rounded-3xl border border-zinc-800 bg-zinc-900">
-
       <div className="border-b border-zinc-800 p-6">
-
         <h2 className="flex items-center gap-3 text-2xl font-bold text-white">
           <Bot className="text-blue-500" />
           AI Career Copilot
@@ -90,11 +89,9 @@ export default function AIChat({
         <p className="mt-2 text-zinc-400">
           Ask anything about resumes, ATS, interviews or software engineering.
         </p>
-
       </div>
 
-      <div className="h-[500px] overflow-y-auto p-6 space-y-5">
-
+      <div className="h-[500px] space-y-5 overflow-y-auto p-6">
         {messages.map((msg, index) => (
           <div
             key={index}
@@ -105,14 +102,13 @@ export default function AIChat({
             }`}
           >
             <div
-              className={`max-w-[80%] rounded-2xl px-5 py-4 whitespace-pre-wrap ${
+              className={`max-w-[80%] whitespace-pre-wrap rounded-2xl px-5 py-4 ${
                 msg.role === "user"
                   ? "bg-blue-600 text-white"
                   : "bg-zinc-800 text-zinc-200"
               }`}
             >
               <div className="mb-2 flex items-center gap-2 text-sm font-semibold">
-
                 {msg.role === "assistant" ? (
                   <>
                     <Bot size={16} />
@@ -124,33 +120,33 @@ export default function AIChat({
                     You
                   </>
                 )}
-
               </div>
 
               {msg.text}
-
             </div>
           </div>
         ))}
 
         {loading && (
           <div className="flex items-center gap-3 text-zinc-400">
-            <Loader2 className="animate-spin" size={18} />
+            <Loader2
+              className="animate-spin"
+              size={18}
+            />
             DevTrack AI is thinking...
           </div>
         )}
 
         <div ref={bottomRef} />
-
       </div>
 
       <div className="border-t border-zinc-800 p-5">
-
         <div className="flex gap-3">
-
           <input
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e) =>
+              setMessage(e.target.value)
+            }
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 sendMessage();
@@ -167,11 +163,8 @@ export default function AIChat({
           >
             <Send size={18} />
           </button>
-
         </div>
-
       </div>
-
     </div>
   );
 }

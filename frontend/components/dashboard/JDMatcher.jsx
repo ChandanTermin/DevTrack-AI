@@ -8,6 +8,8 @@ import MissingSkills from "./MissingSkills";
 import SuggestionCard from "./SuggestionCard";
 import InterviewQuestions from "./InterviewQuestions";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function JDMatcher({ resumeText }) {
   const [jobDescription, setJobDescription] = useState("");
   const [jdResult, setJdResult] = useState(null);
@@ -23,7 +25,7 @@ export default function JDMatcher({ resumeText }) {
       setLoading(true);
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/match-jd",
+        `${API_URL}/match-jd`,
         {
           resume_text: resumeText,
           job_description: jobDescription,
@@ -31,7 +33,6 @@ export default function JDMatcher({ resumeText }) {
       );
 
       setJdResult(response.data);
-
     } catch (error) {
       console.error(error);
       alert("JD Match failed.");
@@ -48,7 +49,6 @@ export default function JDMatcher({ resumeText }) {
 
   return (
     <div className="mt-8 rounded-3xl border border-slate-800 bg-slate-900 p-8 shadow-2xl">
-
       <h2 className="text-3xl font-bold text-white">
         Job Description Match
       </h2>
@@ -71,11 +71,8 @@ export default function JDMatcher({ resumeText }) {
       {jdResult && (
         <>
           <div className="mt-10 flex flex-col items-center">
-
             <div className="flex h-40 w-40 items-center justify-center rounded-full border-[10px] border-violet-500 bg-slate-950 shadow-xl">
-
               <div className="text-center">
-
                 <div
                   className={`text-5xl font-bold ${getColor(
                     jdResult.match_score
@@ -87,30 +84,25 @@ export default function JDMatcher({ resumeText }) {
                 <div className="mt-2 text-slate-400">
                   Match Score
                 </div>
-
               </div>
-
             </div>
-
           </div>
 
           <div className="mt-10 grid gap-6 lg:grid-cols-2">
-
             <MatchedSkills skills={jdResult.matched_skills} />
-
             <MissingSkills skills={jdResult.missing_skills} />
-
           </div>
 
           <SuggestionCard suggestions={jdResult.suggestions} />
-        <section id="interview">
-          <InterviewQuestions
-            resumeText={resumeText}
-            jobDescription={jobDescription}
-          /></section>
+
+          <section id="interview">
+            <InterviewQuestions
+              resumeText={resumeText}
+              jobDescription={jobDescription}
+            />
+          </section>
         </>
       )}
-
     </div>
   );
 }

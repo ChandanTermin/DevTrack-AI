@@ -37,9 +37,9 @@ export default function ResumeUpload({
       setUploading(true);
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/upload",
-        formData
-      );
+  "https://devtrack-ai-j43s.onrender.com/upload",
+  formData
+);
 
       setAnalysis(response.data.analysis);
       setResumeText(response.data.resume_text);
