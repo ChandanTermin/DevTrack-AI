@@ -5,7 +5,7 @@ import { useState } from "react";
 import ResumeUpload from "@/components/dashboard/ResumeUpload";
 import ResumeHealth from "@/components/dashboard/ResumeHealth";
 import StatsCard from "@/components/dashboard/StatsCard";
-
+import AIChat from "@/components/ai/AIChat";
 import {
   Sparkles,
   Target,
@@ -21,27 +21,14 @@ export default function Dashboard() {
   return (
     <section className="space-y-8">
 
-      {/* Heading */}
-
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight text-white">
-          Dashboard
-        </h2>
-
-        <p className="mt-2 text-zinc-400">
-          Analyze your resume, compare it against job descriptions,
-          and prepare for interviews.
-        </p>
-      </div>
-
-      {/* Stats */}
+      {/* Stats Cards */}
 
       <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
 
         <StatsCard
           icon={<Sparkles size={20} />}
           title="ATS Score"
-          value={analysis ? `${analysis.overall_score}/100` : "--"}
+          value={analysis ? `${analysis.overall_score}%` : "--"}
           subtitle="Resume Analysis"
         />
 
@@ -61,16 +48,16 @@ export default function Dashboard() {
 
         <StatsCard
           icon={<Brain size={20} />}
-          title="Interview Questions"
+          title="Interview"
           value="AI"
-          subtitle="Generated Automatically"
+          subtitle="Question Generator"
         />
 
       </div>
 
-      {/* Upload + Resume Health */}
+      {/* Resume Upload */}
 
-      <div className="grid gap-6 xl:grid-cols-[2fr_1fr]">
+      <section id="resume">
 
         <ResumeUpload
           analysis={analysis}
@@ -81,13 +68,23 @@ export default function Dashboard() {
           setJdResult={setJdResult}
         />
 
-        <ResumeHealth
-          analysis={analysis}
-          jdResult={jdResult}
-        />
+      </section>
 
-      </div>
+      {/* Resume Health */}
+
+      <ResumeHealth
+        analysis={analysis}
+        jdResult={jdResult}
+      />
+      <section id="ai">
+  <AIChat
+  resumeText={resumeText}
+  analysis={analysis}
+  jdResult={jdResult}
+/>
+</section>
 
     </section>
+    
   );
 }

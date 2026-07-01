@@ -60,8 +60,7 @@ export default function ResumeUpload({
 
           <FaCloudUploadAlt
             size={70}
-            className="text-violet-500"
-          />
+            className="text-blue-500"          />
 
           <h2 className="mt-5 text-3xl font-bold text-white">
             Upload Your Resume
@@ -85,7 +84,7 @@ export default function ResumeUpload({
 
           <button
             onClick={() => fileInputRef.current.click()}
-            className="mt-6 rounded-xl bg-violet-600 px-8 py-3 font-semibold text-white transition hover:bg-violet-700"
+            className="mt-6 rounded-xl bg-blue-600 px-8 py-3 font-semibold text-white transition hover:bg-blue-700"
           >
             Browse Resume
           </button>
@@ -145,8 +144,7 @@ export default function ResumeUpload({
               disabled={uploading}
               className="mt-8 rounded-xl bg-green-600 px-8 py-3 font-semibold text-white transition hover:bg-green-700 disabled:bg-slate-700"
             >
-              {uploading ? "Uploading..." : "Upload Resume"}
-            </button>
+{uploading ? "Analyzing..." : "Analyze Resume"}            </button>
 
           )}
 
@@ -154,12 +152,14 @@ export default function ResumeUpload({
 
       </div>
 
-      <ATSAnalysis analysis={analysis} />
-
+<section id="ats">
+  <ATSAnalysis analysis={analysis} />
+</section>
       {resumeText && (
-        <JDMatcher resumeText={resumeText} />
-      )}
-
+  <section id="jd">
+    <JDMatcher resumeText={resumeText} />
+  </section>
+)}
     </>
   );
 }

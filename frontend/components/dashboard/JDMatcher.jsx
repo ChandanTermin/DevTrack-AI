@@ -103,11 +103,11 @@ export default function JDMatcher({ resumeText }) {
           </div>
 
           <SuggestionCard suggestions={jdResult.suggestions} />
-
+        <section id="interview">
           <InterviewQuestions
             resumeText={resumeText}
             jobDescription={jobDescription}
-          />
+          /></section>
         </>
       )}
 

@@ -4,7 +4,11 @@ from routers.user import router as user_router
 from routers.resume import router as resume_router
 from database import Base, engine
 
+
+from routers.ai import router as ai_router
 import models
+
+
 
 app = FastAPI()
 
@@ -21,7 +25,9 @@ app.add_middleware(
 )
 app.include_router(user_router)
 app.include_router(resume_router)
+app.include_router(ai_router)
 
 @app.get("/")
 def home():
     return {"message": "Backend is running 🚀"}
+

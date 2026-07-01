@@ -11,19 +11,26 @@ def analyze_resume(sections):
 
     contact = sections.get("contact", "")
     summary = sections.get("summary", "")
-    skills = sections.get("skills", "")
     projects = sections.get("projects", "")
     education = sections.get("education", "")
 
-    contact_score, contact_suggestions = score_contact(contact)
+    # Use the complete resume text for analysis
+    full_resume_text = "\n".join(sections.values())
 
+    # Contact
+    contact_score, contact_suggestions = score_contact(full_resume_text)
+
+    # Summary
     summary_score, summary_suggestions = score_summary(summary)
 
-    skills_score, skills_found, skills_suggestions = score_skills(skills)
+    # Skills
+    skills_score, skills_found, skills_suggestions = score_skills(full_resume_text)
 
-    projects_score, project_suggestions = score_projects(projects)
+    # Projects
+    projects_score, project_suggestions = score_projects(full_resume_text)
 
-    education_score, education_suggestions = score_education(education)
+    # Education
+    education_score, education_suggestions = score_education(full_resume_text)
 
     total_score = (
         contact_score

@@ -1,35 +1,84 @@
+import re
+
+
 def parse_resume(text):
+
     sections = {
         "contact": "",
         "summary": "",
         "skills": "",
         "projects": "",
-        "education": ""
+        "education": "",
     }
 
-    lines = text.splitlines()
+    lower_text = text.lower()
 
-    current_section = "contact"
-
-    headings = {
-        "professional summary": "summary",
-        "technical skills": "skills",
-        "projects": "projects",
-        "education": "education"
+    patterns = {
+        "summary": [
+            "professional summary",
+            "profile summary",
+            "summary",
+        ],
+        "skills": [
+            "technical skills",
+            "skills",
+            "technologies",
+        ],
+        "projects": [
+            "projects",
+            "project",
+        ],
+        "education": [
+            "education",
+            "academic",
+            "qualification",
+        ],
     }
 
-    for line in lines:
-        clean_line = line.strip()
+    positions = []
 
-        if not clean_line:
-            continue
+    for section, keywords in patterns.items():
 
-        lower = clean_line.lower()
+        earliest = None
 
-        if lower in headings:
-            current_section = headings[lower]
-            continue
+        for keyword in keywords:
 
-        sections[current_section] += clean_line + "\n"
+            match = re.search(re.escape(keyword), lower_text)
+
+            if match:
+
+                if earliest is None or match.start() < earliest:
+                    earliest = match.start()
+
+        if earliest is not None:
+            positions.append((earliest, section))
+
+    positions.sort()
+
+    if not positions:
+        sections["contact"] = text
+        return sections
+
+    # Contact is everything before the first detected section
+    first_start = positions[0][0]
+    sections["contact"] = text[:first_start].strip()
+
+    for i in range(len(positions)):
+
+        start, section = positions[i]
+
+        if i < len(positions) - 1:
+            end = positions[i + 1][0]
+        else:
+            end = len(text)
+
+        content = text[start:end]
+
+        first_newline = content.find("\n")
+
+        if first_newline != -1:
+            content = content[first_newline + 1 :]
+
+        sections[section] = content.strip()
 
     return sections

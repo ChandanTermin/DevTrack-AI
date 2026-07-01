@@ -31,6 +31,26 @@ async def upload_resume(file: UploadFile = File(...)):
     # Parse resume
     sections = parse_resume(extracted_text)
 
+    print("\n========================")
+    print("SUMMARY")
+    print("========================")
+    print(sections["summary"])
+
+    print("\n========================")
+    print("SKILLS")
+    print("========================")
+    print(sections["skills"])
+
+    print("\n========================")
+    print("PROJECTS")
+    print("========================")
+    print(sections["projects"])
+
+    print("\n========================")
+    print("EDUCATION")
+    print("========================")
+    print(sections["education"])
+
     # Debug
     print("\n==============================")
     print("PARSED RESUME SECTIONS")
@@ -41,6 +61,10 @@ async def upload_resume(file: UploadFile = File(...)):
         print(value[:300] if value else "EMPTY")
 
     print("\n==============================\n")
+
+    print("\n========== SKILLS DEBUG ==========")
+    print(sections["skills"])
+    print("==================================")
 
     # ATS Analysis
     analysis = analyze_resume(sections)

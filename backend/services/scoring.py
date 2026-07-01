@@ -1,14 +1,31 @@
 import re
 
 
-def score_contact(contact):
+def score_contact(text):
     score = 0
     suggestions = []
 
-    email = re.search(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", contact)
-    phone = re.search(r"\b\d{10}\b", contact)
-    github = re.search(r"github\.com/[A-Za-z0-9_-]+", contact.lower())
-    linkedin = re.search(r"linkedin\.com/in/[A-Za-z0-9_-]+", contact.lower())
+    text = text.lower()
+
+    email = re.search(
+        r"[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}",
+        text,
+    )
+
+    phone = re.search(
+        r"(\+91[\s-]?)?\d{10}",
+        text,
+    )
+
+    github = re.search(
+        r"github\.com/[a-z0-9_-]+",
+        text,
+    )
+
+    linkedin = re.search(
+        r"linkedin\.com/in/[a-z0-9_-]+",
+        text,
+    )
 
     if email:
         score += 3
@@ -76,47 +93,65 @@ def score_skills(skills):
     return score, found, suggestions
 
 
-def score_projects(projects):
+def score_projects(text):
     score = 0
     suggestions = []
 
-    project_count = projects.count("•")
+    text_lower = text.lower()
 
-    action_verbs = [
+    project_keywords = [
         "developed",
         "built",
-        "designed",
-        "implemented",
         "created",
+        "implemented",
+        "designed",
         "optimized",
-        "integrated"
+        "integrated",
     ]
 
-    verbs_found = sum(
-        1 for verb in action_verbs
-        if verb in projects.lower()
+    count = sum(
+        1
+        for word in project_keywords
+        if word in text_lower
     )
 
-    if project_count >= 6:
-        score += 10
-    elif project_count >= 3:
-        score += 7
-    else:
-        score += 4
-        suggestions.append("Add more detailed project descriptions.")
+    score = min(count * 2, 20)
 
-    score += min(verbs_found, 10)
+    if score < 10:
+        suggestions.append(
+            "Add more detailed project descriptions."
+        )
 
     return score, suggestions
 
 
-def score_education(education):
+def score_education(text):
     score = 0
     suggestions = []
 
-    if education.strip():
-        score = 10
-    else:
-        suggestions.append("Add your education details.")
+    text = text.lower()
+
+    keywords = [
+        "cgpa",
+        "college",
+        "engineering",
+        "b.e",
+        "bachelor",
+        "12th",
+        "10th",
+    ]
+
+    found = sum(
+        1
+        for word in keywords
+        if word in text
+    )
+
+    score = min(found * 2, 10)
+
+    if score < 8:
+        suggestions.append(
+            "Add complete education details."
+        )
 
     return score, suggestions

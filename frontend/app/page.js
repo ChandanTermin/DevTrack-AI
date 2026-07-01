@@ -1,10 +1,6 @@
 "use client";
 
-import { useRef } from "react";
-import { ArrowRight, FileText, Target, Briefcase } from "lucide-react";
-
-import ResumeUpload from "@/components/dashboard/ResumeUpload";
-import StatsCard from "@/components/dashboard/StatsCard";
+import { useRouter } from "next/navigation";
 
 import {
   ArrowRight,
@@ -15,8 +11,10 @@ import {
   Download,
 } from "lucide-react";
 
+import StatsCard from "@/components/dashboard/StatsCard";
+
 export default function Home() {
-  const uploadRef = useRef(null);
+  const router = useRouter();
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 text-white">
@@ -32,7 +30,10 @@ export default function Home() {
             <span className="text-blue-500"> AI</span>
           </h1>
 
-          <button className="rounded-xl bg-blue-600 px-5 py-2.5 font-medium transition-all duration-300 hover:bg-blue-700 hover:shadow-lg active:scale-95">
+          <button
+            onClick={() => router.push("/login")}
+            className="rounded-xl bg-blue-600 px-5 py-2.5 font-medium transition-all duration-300 hover:bg-blue-700 hover:shadow-lg active:scale-95"
+          >
             Login
           </button>
 
@@ -68,14 +69,10 @@ export default function Home() {
         </p>
 
         <button
-          onClick={() =>
-            uploadRef.current?.scrollIntoView({
-              behavior: "smooth",
-            })
-          }
+          onClick={() => router.push("/login")}
           className="mt-10 flex items-center gap-2 rounded-xl bg-blue-600 px-8 py-4 font-semibold transition-all duration-300 hover:bg-blue-700 hover:shadow-lg active:scale-95"
         >
-          Analyze Resume
+          Get Started
 
           <ArrowRight size={20} />
         </button>
@@ -84,43 +81,43 @@ export default function Home() {
 
       {/* Stats */}
 
-<section className="mx-auto mb-20 grid max-w-7xl gap-6 px-8 md:grid-cols-2 lg:grid-cols-4">
+      <section className="mx-auto mb-20 grid max-w-7xl gap-6 px-8 md:grid-cols-2 lg:grid-cols-4">
 
-  <StatsCard
-    icon={<FileText size={22} />}
-    title="ATS Score"
-    value="100"
-    subtitle="Maximum Score"
-  />
+        <StatsCard
+          icon={<FileText size={22} />}
+          title="ATS Score"
+          value="100"
+          subtitle="Maximum Score"
+        />
 
-  <StatsCard
-    icon={<Target size={22} />}
-    title="JD Match"
-    value="95%"
-    subtitle="Target Match"
-  />
+        <StatsCard
+          icon={<Target size={22} />}
+          title="JD Match"
+          value="95%"
+          subtitle="Target Match"
+        />
 
-  <StatsCard
-    icon={<Brain size={22} />}
-    title="Interview"
-    value="AI"
-    subtitle="Question Generator"
-  />
+        <StatsCard
+          icon={<Brain size={22} />}
+          title="Interview"
+          value="AI"
+          subtitle="Question Generator"
+        />
 
-  <StatsCard
-    icon={<Download size={22} />}
-    title="Reports"
-    value="PDF"
-    subtitle="Export Analysis"
-  />
+        <StatsCard
+          icon={<Download size={22} />}
+          title="Reports"
+          value="PDF"
+          subtitle="Export Analysis"
+        />
 
-</section>
+      </section>
 
       {/* Features */}
 
-      <section className="mx-auto grid max-w-7xl gap-6 px-8 md:grid-cols-3">
+      <section className="mx-auto mb-24 grid max-w-7xl gap-6 px-8 md:grid-cols-3">
 
-        <div className="rounded-3xl border border-slate-800 bg-slate-900 p-8 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:shadow-xl">
+        <div className="rounded-3xl border border-slate-800 bg-slate-900 p-8 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500">
 
           <FileText className="text-blue-500" size={30} />
 
@@ -134,7 +131,7 @@ export default function Home() {
 
         </div>
 
-        <div className="rounded-3xl border border-slate-800 bg-slate-900 p-8 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:shadow-xl">
+        <div className="rounded-3xl border border-slate-800 bg-slate-900 p-8 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500">
 
           <Target className="text-blue-500" size={30} />
 
@@ -143,13 +140,12 @@ export default function Home() {
           </h3>
 
           <p className="mt-3 text-slate-400">
-            Compare your resume against job descriptions and identify
-            missing skills.
+            Compare your resume against job descriptions and identify missing skills.
           </p>
 
         </div>
 
-        <div className="rounded-3xl border border-slate-800 bg-slate-900 p-8 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:shadow-xl">
+        <div className="rounded-3xl border border-slate-800 bg-slate-900 p-8 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500">
 
           <Briefcase className="text-blue-500" size={30} />
 
@@ -165,18 +161,9 @@ export default function Home() {
 
       </section>
 
-      {/* Resume Upload */}
-
-      <section
-        ref={uploadRef}
-        className="mx-auto mt-24 max-w-7xl px-8"
-      >
-        <ResumeUpload />
-      </section>
-
       {/* Footer */}
 
-      <footer className="mt-24 border-t border-slate-800 py-8 text-center text-slate-500">
+      <footer className="border-t border-slate-800 py-8 text-center text-slate-500">
 
         © 2026 DevTrack AI • Built with Next.js & FastAPI
 
