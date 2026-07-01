@@ -102,6 +102,10 @@ async def interview_questions(data: dict = Body(...)):
         jd_text
     )
 
+    print("========== JD RESULT ==========")
+    print(result)
+    print("===============================")
+
     questions = generate_questions(result)
 
     return {
